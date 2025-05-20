@@ -42,6 +42,7 @@
       font-size: 16px;
       cursor: pointer;
       transition: background-color 0.3s;
+      margin: 5px;
     }
     button:hover {
       background-color: #00e6b8;
@@ -56,17 +57,20 @@
 <body>
   <div class="card">
     <div class="key-label">Your Key:</div>
-    <div class="key" id="keyBox">Loading...</div>
+    <div class="key" id="keyBox">Click "Generate Key"</div>
+    <button onclick="generateAndSendKey()">Generate Key</button>
     <button onclick="copyKey()">Copy Key</button>
     <div class="note">Key expires in 12 hours</div>
   </div>
 
-  <form id="keyForm" action="https://script.google.com/macros/s/AKfycby7ROy240FngsM-2RBX3AY2Syax5AS2RN9M4WcKRy0WLqnoayA7YubX-bCs6UvDMQ5uvg/exec" method="POST" target="hiddenFrame">
+  <form id="keyForm" action="https://script.google.com/macros/s/AKfycbw4FeCXztbuxx1V17CoUpCK1Bnz62PCMHH25n5xoT-JR3j-ovnDKDzJ9Co4GjA8dojDiw/exec" method="POST" target="hiddenFrame">
     <input type="hidden" name="key" id="keyInput" />
   </form>
   <iframe name="hiddenFrame" style="display:none;"></iframe>
 
   <script>
+    let currentKey = '';
+
     function generateKey() {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = 'GAK-';
@@ -76,21 +80,20 @@
       return result;
     }
 
-    // Генерируем ключ и показываем
-    const key = generateKey();
-    document.getElementById("keyBox").innerText = key;
+    function generateAndSendKey() {
+      currentKey = generateKey();
+      document.getElementById("keyBox").innerText = currentKey;
+      document.getElementById("keyInput").value = currentKey;
 
-    // Вставляем ключ в скрытое поле формы
-    document.getElementById("keyInput").value = key;
-
-    // Отправляем форму через небольшую задержку (чтобы DOM обновился)
-    setTimeout(() => {
-      document.getElementById("keyForm").submit();
-      console.log("Key submitted via form.");
-    }, 100);
+      setTimeout(() => {
+        document.getElementById("keyForm").submit();
+        console.log("Key submitted:", currentKey);
+      }, 100);
+    }
 
     function copyKey() {
-      navigator.clipboard.writeText(key).then(() => {
+      if (!currentKey) return alert("Generate a key first!");
+      navigator.clipboard.writeText(currentKey).then(() => {
         alert("Key copied!");
       });
     }
