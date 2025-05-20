@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Your Key</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      text-align: center;
+      width: 400px;
+    }
+    .key-label {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .key {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #00ffcc;
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background-color: #00ffcc;
+      color: #111;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #00e6b8;
+    }
+    .note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="key-label">Your Key:</div>
+    <div class="key" id="keyBox">Loading...</div>
+    <button onclick="copyKey()">Copy Key</button>
+    <div class="note">Key expires in 12 hours</div>
+  </div>
+
+  <form id="keyForm" action="https://script.google.com/macros/s/AKfycby7ROy240FngsM-2RBX3AY2Syax5AS2RN9M4WcKRy0WLqnoayA7YubX-bCs6UvDMQ5uvg/exec" method="POST" target="hiddenFrame">
+    <input type="hidden" name="key" id="keyInput">
+  </form>
+  <iframe name="hiddenFrame" style="display:none;"></iframe>
+
+  <script>
+    function generateKey() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = 'GAK-';
+      for (let i = 0; i < 12; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    const key = generateKey();
+    document.getElementById("keyBox").innerText = key;
+
+    function copyKey() {
+      navigator.clipboard.writeText(key).then(() => {
+        alert("Key copied!");
+      });
+    }
+
+    // Submit key via hidden form to bypass CORS
+    document.getElementById("keyInput").value = key;
+    document.getElementById("keyForm").submit();
+    console.log("Key submitted via form.");
+  </script>
+</body>
+</html>
