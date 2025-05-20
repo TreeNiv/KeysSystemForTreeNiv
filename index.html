@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Get Your Key</title>
   <style>
     body {
@@ -62,7 +62,7 @@
   </div>
 
   <form id="keyForm" action="https://script.google.com/macros/s/AKfycby7ROy240FngsM-2RBX3AY2Syax5AS2RN9M4WcKRy0WLqnoayA7YubX-bCs6UvDMQ5uvg/exec" method="POST" target="hiddenFrame">
-    <input type="hidden" name="key" id="keyInput">
+    <input type="hidden" name="key" id="keyInput" />
   </form>
   <iframe name="hiddenFrame" style="display:none;"></iframe>
 
@@ -76,19 +76,24 @@
       return result;
     }
 
+    // Генерируем ключ и показываем
     const key = generateKey();
     document.getElementById("keyBox").innerText = key;
+
+    // Вставляем ключ в скрытое поле формы
+    document.getElementById("keyInput").value = key;
+
+    // Отправляем форму через небольшую задержку (чтобы DOM обновился)
+    setTimeout(() => {
+      document.getElementById("keyForm").submit();
+      console.log("Key submitted via form.");
+    }, 100);
 
     function copyKey() {
       navigator.clipboard.writeText(key).then(() => {
         alert("Key copied!");
       });
     }
-
-    // Submit key via hidden form to bypass CORS
-    document.getElementById("keyInput").value = key;
-    document.getElementById("keyForm").submit();
-    console.log("Key submitted via form.");
   </script>
 </body>
 </html>
